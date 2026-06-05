@@ -3,12 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chronos-Mori | Uhr der Verganglichkeit</title>
+    <title>Chronos-Mori | Der kalendarische Fluss</title>
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/phaser@3.86.0/dist/phaser.min.js"></script>
 </head>
 <body>
-    <div id="game-container"></div>
+
+    <div class="clock-container">
+        
+        <div class="column spindle-zone" id="col-jahre">
+            <div class="spindle-wrapper">
+                <div class="year-item past">2024</div>
+                <div class="year-item past">2025</div>
+                <div class="year-item active">2026</div>
+                <div class="year-item future">2027</div>
+                <div class="year-item future">2028</div>
+            </div>
+        </div>
+
+        <div class="column grid-zone" id="col-monate" data-label="Monate"></div>
+        <div class="column grid-zone" id="col-tage" data-label="Tage"></div>
+        <div class="column grid-zone" id="col-stunden" data-label="Stunden"></div>
+        <div class="column grid-zone" id="col-minuten" data-label="Minuten"></div>
+
+        <div class="column cascade-zone" id="col-sekunden" data-label="Sekunden"></div>
+    </div>
 
     <script type="module" src="src/main.js"></script>
 </body>
