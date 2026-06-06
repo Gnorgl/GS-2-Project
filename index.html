@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart-Calendar</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div class="clock-container">
+    <div class="clock-container"> <!--für alle anderen Elemente, SuperElement-->
         
-        <div class="column spindle-zone" id="col-jahre">
+        <div class="column spindle-zone" id="col-jahre"> <!--Jahre müssen noch dynamisch gemacht werden, gerade nur visuelle Darstellung-->
             <div class="spindle-wrapper">
-                <div class="year-item past">2024</div>
-                <div class="year-item past">2025</div>
+                <div class="year-item past">2028</div>
+                <div class="year-item past">2027</div>
                 <div class="year-item active">2026</div>
-                <div class="year-item future">2027</div>
-                <div class="year-item future">2028</div>
+                <div class="year-item future">2025</div>
+                <div class="year-item future">2024</div>
             </div>
         </div>
 
-        <div class="column grid-zone" id="col-monate" data-label="Monate">
+        <div class="column grid-zone" id="col-monate" data-label="Monate"> <!--Custom-Data-Attribut, auslesbar in CSS oder JS-->
             <div class="top-stalactites"></div>
             <div class="bottom-stalagmites"></div>
         </div>
