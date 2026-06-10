@@ -76,7 +76,7 @@ body { /*Hier werden die Elemente im Body der HTML Datei allgemein gestyled.*/
 
 .year-item.active {
     opacity: 1;
-    color: var(--color-year); /* Jetzt im perfekten Magenta */
+    color: var(--color-year);
     transform: scale(1.3);
 }
 
