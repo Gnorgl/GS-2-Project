@@ -1,9 +1,9 @@
 import { getAktuelleZeitdaten } from './clock/core.js'; //Importiert die variablen beider anderer js dateien
 import { renderZeitSpalte, renderSekundenKaskade } from './clock/renderer.js';
 
-//Verwaltungsklasse für unsere Logik Klassen
+//Verwaltungsklasse für Logik Klassen
 
-document.addEventListener("DOMContentLoaded", () => { //Evenlistener
+document.addEventListener("DOMContentLoaded", () => { //Eventlistener
     // DOM-Elemente aus der index.html greifen, mit ID
     const colMonate = document.getElementById("col-monate");
     const colTage = document.getElementById("col-tage");
