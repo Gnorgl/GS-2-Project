@@ -18,23 +18,34 @@ body { /*Hier werden die Elemente im Body der HTML Datei allgemein gestyled.*/
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Das Gesamt-Layout*/
+/* Das Gesamt-Layout füllt jetzt fast die gesamte Breite des Bildschirms */
 .clock-container {
-    display: grid; /*Raster */
-    grid-template-columns: 150px 80px 80px 80px 80px 80px; /*Breite der 6 Spalten, Spindel ist bisschen breiter aber mal gucken */
-    gap: 50px; /*Abstand mal gucken */
-    height: 75vh;
+    display: grid;
+    
+    /* Die Jahres-Spindel bekommt 1.5 Anteile, alle anderen Spalten bekommen 1 Anteil vom Platz.
+       Dadurch skaliert das Layout komplett stufenlos und dynamisch mit der Bildschirmbreite! */
+    grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr; 
+    
+    /* Wir reduzieren den Abstand zwischen den Spalten drastisch für maximale Block-Fläche */
+    gap: 12px;
+    
+    /* Die Uhr nimmt 90% der Bildschirmbreite und 80% der Höhe ein */
+    width: 90vw;
+    height: 80vh;
+    
     align-items: start;
     position: relative;
 }
 
-.column { /*vielleicht kalender in eigenem fenster, vlt noch anmeldefunktion rein machen mit json datei maybe*/
-    display: flex; /*eigenes flexbox system aber auch hier mal gucken was sachen machen */
+.column {
+    display: flex;
     flex-direction: column;
-    justify-content: space-between; /*content ganz oben */
+    justify-content: space-between;
     height: 100%;
     position: relative;
-    padding: 0 5px;
+    
+    /* Wir entfernen das seitliche Padding, damit die Blöcke die volle Spaltenbreite ausnutzen */
+    padding: 0; 
 }
 
 /* Die beiden Container innerhalb einer Spalte */
@@ -152,4 +163,19 @@ body { /*Hier werden die Elemente im Body der HTML Datei allgemein gestyled.*/
     width: 80px;
     box-sizing: border-box;
     overflow: hidden; 
+}
+
+.top-stalactites, .bottom-stalagmites {
+    gap: 3px; /* Etwas schmalere Spalten-Lücken für den massiven Look */
+}
+
+.time-block {
+    height: 7px; /* Die Blöcke minimal dicker machen, damit das Verhältnis zur Breite stimmt */
+    border-radius: 2px; /* Eine feine Abrundung an den Kanten */
+}
+
+.second-tile {
+    width: 100%; /* Die Sekunden nehmen jetzt ebenfalls die KOMPLETTE Breite ihrer Spalte ein! */
+    height: calc((100% / 60) - 2px);
+    border-radius: 1px;
 }
