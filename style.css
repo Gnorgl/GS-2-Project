@@ -1,37 +1,53 @@
-:root { /*Hier sind die globalen CSS-Variablen*/
+:root {
     --bg-dark: #0a0e14;
     --color-top: #d5ff00;    
     --color-bottom: #ff00d5; 
     --color-year: #00d5ff;   
 }
 
-body { /*Hier werden die Elemente im Body der HTML Datei allgemein gestyled.*/
-    margin: 0; /*Keine Abstände zwischen Elementen */
-    padding: 0; 
+body {
+    margin: 0;
+    padding: 0;
     background-color: var(--bg-dark);
-    color: #ffffff; /*Hintergrundfarbe */
-    display: flex; /*Zusammen mit justify content und align items werden hierdurch die items horizontal und vertikal zentriert. */
+    color: #ffffff;
+    display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /*sichtbares browserfenster */
-    overflow: hidden; /*kein scrollbalken am bilschirmrand */
+    height: 100vh;
+    overflow: hidden;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: relative; /* Wichtig für die Hintergrund-Positionierung */
 }
 
-/* Das Gesamt-Layout*/
+/* Das abstrakte Jahres-Wasserzeichen im Hintergrund */
+#bg-year-watermark {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 28vw; /* Riesig, skaliert mit der Bildschirmbreite */
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.03); /* Extrem dezent im Hintergrund */
+    user-select: none;
+    z-index: 0;
+    pointer-events: none; /* Klicks gehen durch das Jahr hindurch */
+}
+
+/* Das neue Layout: 5 symmetrische Spalten à 80px */
 .clock-container {
-    display: grid; /*Raster */
-    grid-template-columns: 150px 80px 80px 80px 80px 80px; /*Breite der 6 Spalten, Spindel ist bisschen breiter aber mal gucken */
-    gap: 50px; /*Abstand mal gucken */
+    display: grid;
+    grid-template-columns: repeat(5, 80px); 
+    gap: 60px; /* Leicht erhöht für eine luftigere, abstraktere Wirkung */
     height: 75vh;
     align-items: start;
     position: relative;
+    z-index: 1; /* Liegt elegant vor dem Hintergrund-Jahr */
 }
 
-.column { /*vielleicht kalender in eigenem fenster, vlt noch anmeldefunktion rein machen mit json datei maybe*/
-    display: flex; /*eigenes flexbox system aber auch hier mal gucken was sachen machen */
+.column {
+    display: flex;
     flex-direction: column;
-    justify-content: space-between; /*content ganz oben */
+    justify-content: space-between;
     height: 100%;
     position: relative;
     padding: 0 5px;
