@@ -2,7 +2,7 @@
     --bg-light: #e0e5ee; 
     --text-dark: #191f28;
 
-    /* REINE GLAS-DNA FÜR DIE SEGMENTE */
+    /* REINE LIQUID GLASS DNA */
     --glass-base: rgba(255, 255, 255, 0.35);    
     --glass-hover-bg: rgba(255, 255, 255, 0.5);
     --glass-glow: #ffffff;
@@ -61,12 +61,13 @@ body {
     gap: 50px; 
 }
 
-/* --- THE CONTAINER (Jetzt unsichtbar, rein strukturell) --- */
+
+/* --- 1. SCHICHT: DIE HAUPTCONTAINER (Das strukturelle Gerüst) --- */
 .top-stalactites, .bottom-stalagmites {
     display: flex;
     width: 100%;
     height: auto; 
-    padding: 0; /* Padding entfernt, damit die Blöcke die volle Breite nutzen */
+    padding: 0; 
     background: none !important;
     border: none !important;
     box-shadow: none !important;
@@ -76,92 +77,99 @@ body {
     position: relative;
     z-index: 3; 
     
-    /* Steuert den Abstand zwischen den Molekülen beim Hover */
+    /* Steuert die elastische Ausdehnung bei Zeitwechsel und das Aufdriften im Hover */
     transition: flex-grow 1.2s cubic-bezier(0.25, 1, 0.5, 1),
                 gap 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Richtung der Flex-Ausrichtung bleibt bestehen */
 .top-stalactites { flex-direction: column; gap: 0px; }
 .bottom-stalagmites { flex-direction: column-reverse; gap: 0px; }
 
-/* Wenn die Spalte gehovered wird, driften die Segmente zart auseinander */
+/* Beim Hover öffnen sich die Abstände für die inneren Blöcke */
 .top-stalactites:hover, .bottom-stalagmites:hover {
     gap: 6px; 
 }
 
 
-/* --- DIE MOLEKULAREN ZEITSEGMENTE (Mit dem originalen Sekundenbalken-Glow) --- */
+/* --- 2. SCHICHT: DER PERFEKTE LIQUID-GLASS MONOLITH (Im Ruhezustand sichtbar) --- */
+.top-stalactites::before, .bottom-stalagmites::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 20px;
+    
+    /* Die exakte, ungebrochene Premium-Glasoptik */
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.2) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    
+    backdrop-filter: blur(35px) saturate(150%);
+    -webkit-backdrop-filter: blur(35px) saturate(150%);
+    
+    box-shadow: 
+        0 4px 12px rgba(25, 31, 40, 0.03),     
+        0 20px 40px rgba(110, 125, 150, 0.12), 
+        inset 0 1px 2px rgba(255, 255, 255, 0.7); 
+        
+    z-index: 4; /* Liegt exakt ÜBER den unsichtbaren Blöcken */
+    pointer-events: none; /* Ignoriert die Maus, damit Hover auf Container wirkt */
+    
+    opacity: 1;
+    transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* UNSICHTBAR-EFFEKT: Wenn die Spalte gehovered wird, schmilzt der Monolith weg */
+.top-stalactites:hover::before, .bottom-stalagmites:hover::before {
+    opacity: 0;
+}
+
+
+/* --- 3. SCHICHT: DIE ZEITSEGMENTE (Erst beim Hover aktiv) --- */
 .time-block {
     width: 100%;
     flex-grow: 1; 
     height: auto; 
     
-    /* LIQUID GLASS PERFEKTION: Der identische matte, satinierte Glas-Look wie die Sekunden */
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.25) 100%);
+    /* Design der Moleküle beim Auseinanderbrechen */
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.35) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 12px; 
     
-    /* Der Rahmen ist permanent da, um das schwarze Aufblitzen im Keim zu ersticken! */
-    border: 1px solid transparent; 
-    
-    /* Aktiviert die dichte Lichtbrechung permanent auf allen Segmenten */
     backdrop-filter: blur(35px) saturate(150%);
     -webkit-backdrop-filter: blur(35px) saturate(150%);
+    
+    box-shadow: 
+        0 6px 15px rgba(110, 125, 150, 0.08),
+        inset 0 1px 1px rgba(255, 255, 255, 0.4);
+        
+    z-index: 2; /* Befindet sich hinter dem Monolithen */
+    
+    /* IM RUHEZUSTAND VOLLKOMMEN UNSICHTBAR */
+    opacity: 0;
     
     transform: translateZ(0);
     transition: flex-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
                 background 0.4s ease,
                 border-color 0.3s ease,
                 box-shadow 0.4s ease,
-                border-radius 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+                opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* 1. DER RUHEZUSTAND: Die Segmente verschmelzen nahtlos */
-.top-stalactites:not(:hover) .time-block,
-.bottom-stalagmites:not(:hover) .time-block {
-    border-radius: 0px;
-    border-color: transparent; /* Unsichtbar, aber physikalisch geladen */
-    box-shadow: none;
-}
-
-/* Die jeweils äußersten Enden formen den perfekten Monolith-Abschluss */
-.top-stalactites:not(:hover) .time-block:first-child { border-radius: 20px 20px 0 0; }
-.top-stalactites:not(:hover) .time-block:last-child { border-radius: 0 0 20px 20px; }
-.bottom-stalagmites:not(:hover) .time-block:first-child { border-radius: 0 0 20px 20px; }
-.bottom-stalagmites:not(:hover) .time-block:last-child { border-radius: 20px 20px 0 0; }
-
-/* Das umschließende Gehäuse sorgt im Ruhezustand für die gemeinsame Lichtkante und Plastizität */
-.top-stalactites:not(:hover), .bottom-stalagmites:not(:hover) {
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    box-shadow: 
-        0 4px 12px rgba(25, 31, 40, 0.03),     
-        0 20px 40px rgba(110, 125, 150, 0.12), 
-        inset 0 1px 2px rgba(255, 255, 255, 0.7);
-}
-
-
-/* 2. DER HOVER-ZUSTAND: Sanftes, farbechtes Auseinandergleiten */
+/* SICHTBAR-EFFEKT: Blöcke blenden butterweich ein, wenn der Container berührt wird */
 .top-stalactites:hover .time-block.future,
 .bottom-stalagmites:hover .time-block.past {
-    /* Wechselt rein den Farbton des Hintergrunds */
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.35) 100%);
-    
-    /* Edle, weiße Lichtkante blendet rein – garantiert ohne schwarze Artefakte */
-    border-color: rgba(255, 255, 255, 0.5);
-    border-radius: 12px; 
-    
-    /* Subtiler, weicher Raumschatten um jede "Kapsel" */
-    box-shadow: 
-        0 6px 15px rgba(110, 125, 150, 0.08),
-        inset 0 1px 1px rgba(255, 255, 255, 0.4);
+    opacity: 1;
 }
 
-/* INTERAKTION: Das Segment direkt unter der Maus expandiert */
+/* INTERAKTION: Das Segment direkt unter der Maus expandiert kraftvoll */
 .top-stalactites:hover .time-block:hover,
 .bottom-stalagmites:hover .time-block:hover {
     flex-grow: 6; 
 }
 
-/* Reiner, glühender Hochglanz-Fokus (Keine dunkle Outline!) */
+/* Hocheleganter, reiner Glanz-Fokus des aktiven Blocks (Garantierte Farbreinheit) */
 .top-stalactites:hover .time-block.future:hover,
 .bottom-stalagmites:hover .time-block.past:hover {
     background: var(--glass-glow); 
@@ -174,7 +182,7 @@ body {
 }
 
 
-/* --- SECONDS PROGRESS BAR --- */
+/* --- SECONDS PROGRESS BAR (Originaler Liquid-Glass Maßstab) --- */
 .cascade-zone {
     display: flex;
     flex-direction: column; 
@@ -183,7 +191,7 @@ body {
     width: 110px; 
     padding: 8px;
     
-    background-color: var(--glass-base);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.2) 100%);
     border: 1px solid rgba(255, 255, 255, 0.5);
     backdrop-filter: blur(35px) saturate(150%);
     -webkit-backdrop-filter: blur(35px) saturate(150%);
