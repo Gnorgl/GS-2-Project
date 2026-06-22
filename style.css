@@ -1,8 +1,10 @@
+/* ==========================================================================
+   LIQUID GLASS CLOCK - DESIGN ARCHITECTURE
+   ========================================================================== */
+
 :root {
     --bg-light: #e0e5ee; 
     --text-dark: #191f28;
-
-    /* REINE LIQUID GLASS DNA */
     --glass-base: rgba(255, 255, 255, 0.35);    
     --glass-hover-bg: rgba(255, 255, 255, 0.5);
     --glass-glow: #ffffff;
@@ -13,10 +15,14 @@
     -webkit-font-smoothing: antialiased;
 }
 
+/* ==========================================================================
+   PURE MINIMALIST STUDIO HINTERGRUND MATRIX
+   ========================================================================== */
+
 body {
     margin: 0;
     padding: 0;
-    background-color: var(--bg-light);
+    background: radial-gradient(circle at 50% 50%, #eceff5 0%, #d3dae6 100%);
     color: var(--text-dark);
     display: flex;
     justify-content: center;
@@ -28,19 +34,32 @@ body {
     z-index: 1;
 }
 
+body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3e%3cfilter id='noiseFilter'%3e%3cfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3e%3c/svg%3e");
+    opacity: 0.015;
+    mix-blend-mode: overlay;
+    pointer-events: none;
+    z-index: 1;
+}
+
 #bg-year-watermark {
     position: absolute;
-    top: 50%;
-    left: 50%;
+    top: 50%; left: 50%;
     transform: translate(-50%, -50%);
     font-size: 28vw;
     font-weight: 900;
-    color: rgba(25, 31, 40, 0.025); 
+    color: rgba(25, 31, 40, 0.035); 
+    letter-spacing: -0.02em;
     user-select: none;
-    z-index: 0; 
+    z-index: 1;
     pointer-events: none;
+    mix-blend-mode: multiply;
 }
 
+/* --- THE MAIN GRID --- */
 .clock-container {
     display: grid;
     grid-template-columns: repeat(5, 110px); 
@@ -61,8 +80,10 @@ body {
     gap: 50px; 
 }
 
+/* ==========================================================================
+   DIE ARCHITEKTUR DER HAUPTCONTAINER (Strukturelles Gerüst)
+   ========================================================================== */
 
-/* --- 1. SCHICHT: DIE HAUPTCONTAINER (Das strukturelle Gerüst) --- */
 .top-stalactites, .bottom-stalagmites {
     display: flex;
     width: 100%;
@@ -73,11 +94,8 @@ body {
     box-shadow: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    
     position: relative;
     z-index: 3; 
-    
-    /* Steuert die elastische Ausdehnung bei Zeitwechsel und das Aufdriften im Hover */
     transition: flex-grow 1.2s cubic-bezier(0.25, 1, 0.5, 1),
                 gap 0.5s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -85,70 +103,51 @@ body {
 .top-stalactites { flex-direction: column; gap: 0px; }
 .bottom-stalagmites { flex-direction: column-reverse; gap: 0px; }
 
-/* Beim Hover öffnen sich die Abstände für die inneren Blöcke */
 .top-stalactites:hover, .bottom-stalagmites:hover {
     gap: 6px; 
 }
 
-
-/* --- 2. SCHICHT: DER PERFEKTE LIQUID-GLASS MONOLITH (Im Ruhezustand sichtbar) --- */
+/* --- DER PERFEKTE LIQUID-GLASS MONOLITH (Ruhezustand) --- */
 .top-stalactites::before, .bottom-stalagmites::before {
     content: "";
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    border-radius: 20px;
-    
-    /* Die exakte, ungebrochene Premium-Glasoptik */
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.2) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    
-    backdrop-filter: blur(35px) saturate(150%);
-    -webkit-backdrop-filter: blur(35px) saturate(150%);
-    
+    top: 0; left: 0; right: 0; bottom: 0;
+    border-radius: 24px; 
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.15) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(40px) saturate(160%);
+    -webkit-backdrop-filter: blur(40px) saturate(160%);
     box-shadow: 
-        0 4px 12px rgba(25, 31, 40, 0.03),     
-        0 20px 40px rgba(110, 125, 150, 0.12), 
-        inset 0 1px 2px rgba(255, 255, 255, 0.7); 
-        
-    z-index: 4; /* Liegt exakt ÜBER den unsichtbaren Blöcken */
-    pointer-events: none; /* Ignoriert die Maus, damit Hover auf Container wirkt */
-    
+        inset 0 1px 2px rgba(255, 255, 255, 0.8),
+        0 4px 10px rgba(25, 31, 40, 0.03),         
+        0 15px 30px rgba(110, 125, 150, 0.1),      
+        0 35px 65px rgba(90, 105, 130, 0.15);     
+    z-index: 4; 
+    pointer-events: none; 
     opacity: 1;
+    transform: translateZ(0);
     transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* UNSICHTBAR-EFFEKT: Wenn die Spalte gehovered wird, schmilzt der Monolith weg */
 .top-stalactites:hover::before, .bottom-stalagmites:hover::before {
     opacity: 0;
 }
 
+/* ==========================================================================
+   DIE ZEITSEGMENTE / MOLEKÜLE
+   ========================================================================== */
 
-/* --- 3. SCHICHT: DIE ZEITSEGMENTE (Erst beim Hover aktiv) --- */
 .time-block {
     width: 100%;
     flex-grow: 1; 
     height: auto; 
-    
-    /* Design der Moleküle beim Auseinanderbrechen */
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.35) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    border: 1px solid transparent; 
     border-radius: 12px; 
-    
-    backdrop-filter: blur(35px) saturate(150%);
-    -webkit-backdrop-filter: blur(35px) saturate(150%);
-    
-    box-shadow: 
-        0 6px 15px rgba(110, 125, 150, 0.08),
-        inset 0 1px 1px rgba(255, 255, 255, 0.4);
-        
-    z-index: 2; /* Befindet sich hinter dem Monolithen */
-    
-    /* IM RUHEZUSTAND VOLLKOMMEN UNSICHTBAR */
-    opacity: 0;
-    
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.25) 100%);
+    backdrop-filter: blur(40px) saturate(160%);
+    -webkit-backdrop-filter: blur(40px) saturate(160%);
+    z-index: 2; 
+    opacity: 0; /* Versteckt unter Monolith */
     transform: translateZ(0);
     transition: flex-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
                 background 0.4s ease,
@@ -157,64 +156,91 @@ body {
                 opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* SICHTBAR-EFFEKT: Blöcke blenden butterweich ein, wenn der Container berührt wird */
+/* Einblenden bei Spalten-Hover */
 .top-stalactites:hover .time-block.future,
 .bottom-stalagmites:hover .time-block.past {
     opacity: 1;
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 10px rgba(110, 125, 150, 0.05);
 }
 
-/* INTERAKTION: Das Segment direkt unter der Maus expandiert kraftvoll */
+/* Elastisches Aufdehnen */
 .top-stalactites:hover .time-block:hover,
 .bottom-stalagmites:hover .time-block:hover {
     flex-grow: 6; 
 }
 
-/* Hocheleganter, reiner Glanz-Fokus des aktiven Blocks (Garantierte Farbreinheit) */
+/* DIE EDLE ZARTE FOKUS-MULDE (Wenn die Maus direkt auf dem Block liegt) */
 .top-stalactites:hover .time-block.future:hover,
 .bottom-stalagmites:hover .time-block.past:hover {
-    background: var(--glass-glow); 
-    border-color: rgba(255, 255, 255, 1);
-    
+    background: rgba(255, 255, 255, 0.03) !important; 
+    border-color: rgba(25, 31, 40, 0.08) !important;  
     box-shadow: 
-        0 15px 35px rgba(25, 31, 40, 0.12), 
-        0 5px 12px rgba(25, 31, 40, 0.04),
-        inset 0 1px 2px rgba(255, 255, 255, 1);
+        inset 0 6px 14px rgba(25, 31, 40, 0.04),
+        inset 0 1px 3px rgba(25, 31, 40, 0.02),
+        0 1px 2px rgba(255, 255, 255, 0.4) !important;
 }
 
+/* ==========================================================================
+   DIE SEKUNDEN-KASKADE: NAHTLOSE GUSSFORM
+   ========================================================================== */
 
-/* --- SECONDS PROGRESS BAR (Originaler Liquid-Glass Maßstab) --- */
+/* DIE SÄULE: Wieder im identischen, edlen Liquid-Glass-Look */
 .cascade-zone {
     display: flex;
     flex-direction: column; 
     justify-content: flex-end; 
     height: 100%;
     width: 110px; 
-    padding: 8px;
-    
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.2) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    backdrop-filter: blur(35px) saturate(150%);
-    -webkit-backdrop-filter: blur(35px) saturate(150%);
-    box-shadow: 
-        0 4px 12px rgba(25, 31, 40, 0.03),
-        0 20px 40px rgba(110, 125, 150, 0.12),
-        inset 0 1px 2px rgba(255, 255, 255, 0.7);
-    overflow: hidden;
-    border-radius: 20px;
+    padding: 0; 
+    border-radius: 24px; /* Identisch zu den Monolithen */
+    overflow: hidden; /* Schneidet herauf- und herausfließende Balken sauber ab */
     position: relative;
     z-index: 3;
+    
+    /* Der bewährte Liquid-Glass-Körper im Ruhezustand */
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.15) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(40px) saturate(160%);
+    -webkit-backdrop-filter: blur(40px) saturate(160%);
+    box-shadow: 
+        inset 0 1px 2px rgba(255, 255, 255, 0.8),
+        0 4px 10px rgba(25, 31, 40, 0.03),         
+        0 15px 30px rgba(110, 125, 150, 0.1),      
+        0 35px 65px rgba(90, 105, 130, 0.15); 
 }
 
+/* DIE FLÜSSIGEN SEKUNDEN-TRACKS */
 .seconds-progress {
     width: 100%;
-    height: 0%; 
-    border-radius: 12px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 100%);
-    box-shadow: 
-        0 4px 15px rgba(255, 255, 255, 0.25),
-        inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    height: 100%; 
+    border-radius: 24px; 
+    position: absolute;
+    bottom: 0;
+    left: 0;
     
-    transition: height 1s linear; 
+    /* DER VERLAUF: Oben sattes Weiß, fadet nach unten zu 100% ins unsichtbare Nichts */
+    background: linear-gradient(
+        180deg, 
+        rgba(255, 255, 255, 0.9) 0%,   /* Oben: Starker Kontrast */
+        rgba(255, 255, 255, 0.0) 100%  /* Unten: Verschmilzt mit dem Studio-Hintergrund */
+    );
+    
+    /* Scharfe Licht-Oberkante */
+    border-top: 1px solid rgba(255, 255, 255, 1);
+    box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.4);
+    
+    /* Startposition: Ganz unten versteckt */
+    transform: translateY(100%); 
+    
+    /* Standard-Übergang für das flüssige Steigen (1s linear) */
+    transition: transform 1s linear, opacity 0.5s ease;
+}
+
+/* Hilfsklasse für den abgelaufenen Balken, der nach oben entweicht */
+.seconds-progress.exiting {
+    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
+    opacity: 0; /* Fadet beim Entweichen elegant aus */
 }
 
 .spindle-zone, .spindle-wrapper, .year-item, .second-tile {
