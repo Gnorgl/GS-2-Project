@@ -5,64 +5,58 @@ export function renderZeitSpalte(container, maxBloecke, aktuellerVergangenheitsW
     const zukunftsBloeckeAnzahl = maxBloecke - aktuellerVergangenheitsWert - 1;
     const vergangenheitsBloeckeAnzahl = aktuellerVergangenheitsWert + 1;
 
-    // 1. INITIALER AUFBAU (Beim Laden der Seite)
-    if (topContainer.children.length === 0 && bottomContainer.children.length === 0) {
-        // Zukunft (oben)
-        for (let i = 0; i < zukunftsBloeckeAnzahl; i++) {
+    // Setzt die elastische Masse der beiden Hauptbalken
+    topContainer.style.flexGrow = zukunftsBloeckeAnzahl;
+    bottomContainer.style.flexGrow = vergangenheitsBloeckeAnzahl;
+
+    // Blendet leere Container sauber aus
+    topContainer.style.display = zukunftsBloeckeAnzahl === 0 ? "none" : "flex";
+    bottomContainer.style.display = vergangenheitsBloeckeAnzahl === 0 ? "none" : "flex";
+
+    // Dynamischer Abgleich der inneren Segmente für den Hover-Zustand
+    if (topContainer.children.length > zukunftsBloeckeAnzahl) {
+        while (topContainer.children.length > zukunftsBloeckeAnzahl) {
+            topContainer.lastElementChild?.remove();
+        }
+    } else if (topContainer.children.length < zukunftsBloeckeAnzahl) {
+        while (topContainer.children.length < zukunftsBloeckeAnzahl) {
             const block = document.createElement("div");
             block.className = "time-block future";
             topContainer.appendChild(block);
         }
-        
-        // Vergangenheit (unten)
-        for (let i = 0; i < vergangenheitsBloeckeAnzahl; i++) {
-            const block = document.createElement("div");
-            block.className = "time-block past";
-            block.dataset.index = i;
-            bottomContainer.appendChild(block);
-        }
-        return;
     }
 
-    // 2. DYNAMISCHER WECHSEL (Wenn ein Block herunterfällt)
-    if (topContainer.children.length > zukunftsBloeckeAnzahl) {
-        const fallenderBlock = topContainer.lastElementChild;
-        if (fallenderBlock) {
-            fallenderBlock.remove();
+    if (bottomContainer.children.length < vergangenheitsBloeckeAnzahl) {
+        while (bottomContainer.children.length < vergangenheitsBloeckeAnzahl) {
+            const block = document.createElement("div");
+            block.className = "time-block past";
+            bottomContainer.appendChild(block);
         }
-
-        const neuerPastBlock = document.createElement("div");
-        neuerPastBlock.className = "time-block past just-fell";
-        neuerPastBlock.dataset.index = bottomContainer.children.length;
-        
-        bottomContainer.appendChild(neuerPastBlock);
-
-        setTimeout(() => {
-            neuerPastBlock.classList.remove("just-fell");
-        }, 500);
+    } else if (bottomContainer.children.length > vergangenheitsBloeckeAnzahl) {
+        while (bottomContainer.children.length > vergangenheitsBloeckeAnzahl) {
+            bottomContainer.lastElementChild?.remove();
+        }
     }
 }
 
 export function renderSekundenKaskade(container, aktuelleSekunde) {
-    if (aktuelleSekunde === 0) {
+    let progressIndicator = container.querySelector(".seconds-progress");
+    
+    if (!progressIndicator) {
         container.innerHTML = "";
-        return;
+        progressIndicator = document.createElement("div");
+        progressIndicator.className = "seconds-progress";
+        container.appendChild(progressIndicator);
     }
 
-    const vorhandeneKacheln = container.children.length;
+    const prozent = (aktuelleSekunde / 60) * 100;
 
-    if (vorhandeneKacheln < aktuelleSekunde) {
-        while (container.children.length < aktuelleSekunde) {
-            const kachel = document.createElement("div");
-            kachel.classList.add("second-tile");
-            container.appendChild(kachel);
-        }
-    } else if (vorhandeneKacheln > aktuelleSekunde) {
-        container.innerHTML = "";
-        for (let i = 0; i < aktuelleSekunde; i++) {
-            const kachel = document.createElement("div");
-            kachel.classList.add("second-tile");
-            container.appendChild(kachel);
-        }
+    if (aktuelleSekunde === 0) {
+        progressIndicator.style.transition = "none";
+        progressIndicator.style.height = "0%";
+        progressIndicator.offsetHeight; 
+        progressIndicator.style.transition = "height 1s linear";
+    } else {
+        progressIndicator.style.height = `${prozent}%`;
     }
 }

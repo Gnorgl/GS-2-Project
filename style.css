@@ -1,47 +1,54 @@
 :root {
-    --bg-dark: #0a0e14;
-    --color-top: #d5ff00;    
-    --color-bottom: #ff00d5; 
-    --color-year: #00d5ff;   
+    --bg-light: #e0e5ee; 
+    --text-dark: #191f28;
+
+    /* EINHEITLICHE LIQUID GLASS FORMEL */
+    --glass-base: rgba(255, 255, 255, 0.35);    
+    --glass-hover-bg: rgba(255, 255, 255, 0.5);
+    --glass-glow: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
 }
 
 body {
     margin: 0;
     padding: 0;
-    background-color: var(--bg-dark);
-    color: #ffffff;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     overflow: hidden;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    position: relative; /* Wichtig für die Hintergrund-Positionierung */
+    position: relative;
+    z-index: 1;
 }
 
-/* Das abstrakte Jahres-Wasserzeichen im Hintergrund */
 #bg-year-watermark {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 28vw; /* Riesig, skaliert mit der Bildschirmbreite */
+    font-size: 28vw;
     font-weight: 900;
-    color: rgba(255, 255, 255, 0.03); /* Extrem dezent im Hintergrund */
+    color: rgba(25, 31, 40, 0.025); 
     user-select: none;
-    z-index: 0;
-    pointer-events: none; /* Klicks gehen durch das Jahr hindurch */
+    z-index: 0; 
+    pointer-events: none;
 }
 
-/* Das neue Layout: 5 symmetrische Spalten à 80px */
 .clock-container {
     display: grid;
-    grid-template-columns: repeat(5, 80px); 
-    gap: 60px; /* Leicht erhöht für eine luftigere, abstraktere Wirkung */
-    height: 75vh;
+    grid-template-columns: repeat(5, 110px); 
+    gap: 80px; 
+    height: 80vh; 
     align-items: start;
     position: relative;
-    z-index: 1; /* Liegt elegant vor dem Hintergrund-Jahr */
+    z-index: 2; 
 }
 
 .column {
@@ -51,121 +58,134 @@ body {
     height: 100%;
     position: relative;
     padding: 0 5px;
+    gap: 50px; 
 }
 
-/* Die beiden Container innerhalb einer Spalte */
-.top-stalactites {
+/* --- LIQUID GLASS CONTAINER --- */
+.top-stalactites, .bottom-stalagmites {
     display: flex;
-    flex-direction: column;
-    gap: 4px; 
     width: 100%;
+    height: auto; 
+    border-radius: 20px; 
+    padding: 8px; 
+    
+    backdrop-filter: blur(35px) saturate(150%);
+    -webkit-backdrop-filter: blur(35px) saturate(150%);
+    
+    box-shadow: 
+        0 4px 12px rgba(25, 31, 40, 0.03),     
+        0 20px 40px rgba(110, 125, 150, 0.12), 
+        inset 0 1px 2px rgba(255, 255, 255, 0.7); 
+    
+    position: relative;
+    z-index: 3; 
+    
+    transform: translateZ(0);
+    /* Die träge, flüssige Verschiebung der Massen um die eigene Länge */
+    transition: flex-grow 1.2s cubic-bezier(0.25, 1, 0.5, 1),
+                gap 0.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.top-stalactites {
+    flex-direction: column;
+    gap: 0px; 
+    background-color: var(--glass-base); 
+    border: 1px solid rgba(255, 255, 255, 0.5); 
 }
 
 .bottom-stalagmites {
-    display: flex;
-    flex-direction: column-reverse; /*Neue Elemente werden oben, ältestes Element immer unten, wie Queue */
-    gap: 4px; /*Abstand vielleicht noch ändern */
-    width: 100%;
+    flex-direction: column-reverse; 
+    gap: 0px; 
+    background-color: var(--glass-base); 
+    border: 1px solid rgba(255, 255, 255, 0.5); 
 }
 
-/* --- ZONE 1: JAHRES-SPINDEL (Statisch) --- */
-.spindle-zone {
-    border: none;
-    justify-content: center;
-    overflow: hidden;
+.top-stalactites:hover, .bottom-stalagmites:hover {
+    gap: 5px; 
+    background-color: var(--glass-hover-bg);
+    box-shadow: 
+        0 8px 20px rgba(25, 31, 40, 0.05),
+        0 30px 60px rgba(90, 105, 130, 0.18),
+        inset 0 1px 4px rgba(255, 255, 255, 0.9);
 }
 
-.spindle-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-}
-
-.year-item {
-    font-size: 24px;
-    font-weight: bold;
-    opacity: 0.2;
-    transition: all 0.3s;
-    user-select: none;
-}
-
-.year-item.active {
-    opacity: 1;
-    color: var(--color-year);
-    transform: scale(1.3);
-}
-
-/* --- ZONE 2 & 3: Blöcke und Sekunden--- */
-
-/*Farben sind auch noch nicht final */
-
-/*Oben Blöcke*/
-.top-stalactites .time-block.future {
-    background-color: var(--color-top);
-}
-
-/*Unten Blöcke*/
-.bottom-stalagmites .time-block.past {
-    background-color: var(--color-bottom);
-}
-
-/* Sekunden-Kacheln bauen sich von unten auf*/
-.second-tile {
-    background-color: var(--color-year);
-}
-
-.time-block, .second-tile {
-    width: 100%;
-    border-radius: 1px;
-    cursor: pointer;
-    transition: transform 0.2s, box-shadow 0.2s;
-}
-
-/* Spezifische Maße für die Zeitblöcke */
+/* DIE EINZELNEN ZEITSEGMENTE */
 .time-block {
-    height: 6px;
+    width: 100%;
+    flex-grow: 1; 
+    height: auto; 
+    border-radius: 8px; 
+    background-color: transparent; 
+    transform: translateZ(0);
+    transition: flex-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+                background-color 0.4s ease,
+                box-shadow 0.4s ease;
 }
 
-/* Hover-Effekt */
-.time-block:hover {
-    transform: scaleX(1.08);
-    box-shadow: 0 0 12px rgba(255, 255, 255, 0.3);
+/* Strukturierung im Hover über weiche Transluzenz */
+.top-stalactites:hover .time-block.future,
+.bottom-stalagmites:hover .time-block.past {
+    background-color: rgba(255, 255, 255, 0.25);
+    outline: none;
+    border: none;
 }
 
-/* Spezifische Maße für die Sekunden */
-.second-tile {
-    width: 12px; 
-    height: calc((100% / 60) - 2px); /*Berechnet die Höhe der Sekunden so, dass exakt 60 kacheln mit abstand von 75vh rein passen, bisschen buggy noch */
-    min-height: 2px; 
-    margin: 1px 0; 
-    flex-shrink: 1; 
-    animation: fall 0.2s ease-out forwards; /*forward lässt elemente nach ablauf der animation an zustand des letzten frames bleiben und nicht zurückspringen */
+/* INTERAKTION: Das Segment direkt unter der Maus bläht sich auf */
+.top-stalactites:hover .time-block:hover,
+.bottom-stalagmites:hover .time-block:hover {
+    flex-grow: 6; 
 }
 
-/* Fall-Animationen ohne farbliche Veränderung, irgendwie funktioniert gradient nicht so wirklich*/
-@keyframes fall {
-    0% { transform: translateY(-40px); opacity: 0; }
-    100% { transform: translateY(0); opacity: 1; }
+/* Reine Licht- und Schattierungshervorhebung beim Fokussieren */
+.top-stalactites:hover .time-block.future:hover,
+.bottom-stalagmites:hover .time-block.past:hover {
+    background-color: var(--glass-glow); 
+    outline: none;
+    border: none;
+    
+    box-shadow: 
+        0 12px 28px rgba(25, 31, 40, 0.15), 
+        0 4px 10px rgba(25, 31, 40, 0.05),
+        inset 0 1px 2px rgba(255, 255, 255, 1);
 }
 
-.time-block.just-fell {
-    animation: blockFall 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-}
-
-@keyframes blockFall {
-    0% { transform: translateY(-200px); opacity: 0.4; }
-    100% { transform: translateY(0); opacity: 1; }
-}
-
-/* Die Sekunden-Zone */
+/* --- SECONDS PROGRESS BAR --- */
 .cascade-zone {
     display: flex;
-    flex-direction: column-reverse; 
-    justify-content: flex-start;
-    align-items: center;
+    flex-direction: column; 
+    justify-content: flex-end; 
     height: 100%;
-    width: 80px;
-    box-sizing: border-box;
-    overflow: hidden; 
+    width: 110px; 
+    padding: 8px;
+    
+    background-color: var(--glass-base);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(35px) saturate(150%);
+    -webkit-backdrop-filter: blur(35px) saturate(150%);
+    box-shadow: 
+        0 4px 12px rgba(25, 31, 40, 0.03),
+        0 20px 40px rgba(110, 125, 150, 0.12),
+        inset 0 1px 2px rgba(255, 255, 255, 0.7);
+    overflow: hidden;
+    border-radius: 20px;
+    position: relative;
+    z-index: 3;
+}
+
+.seconds-progress {
+    width: 100%;
+    height: 0%; 
+    border-radius: 12px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.5) 100%);
+    box-shadow: 
+        0 4px 15px rgba(255, 255, 255, 0.25),
+        inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    
+    transition: height 1s linear; 
+}
+
+.spindle-zone, .spindle-wrapper, .year-item, .second-tile {
+    display: none;
 }
