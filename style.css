@@ -70,6 +70,7 @@ body::before {
     z-index: 2; 
 }
 
+/* DIE SPALTE: Reine, cleane Layout-Hülle ohne eigenen Filter */
 .column {
     display: flex;
     flex-direction: column;
@@ -107,7 +108,7 @@ body::before {
     gap: 6px; 
 }
 
-/* --- DER PERFEKTE LIQUID-GLASS MONOLITH (Ruhezustand) --- */
+/* DER PERFEKTE LIQUID-GLASS MONOLITH */
 .top-stalactites::before, .bottom-stalagmites::before {
     content: "";
     position: absolute;
@@ -129,6 +130,7 @@ body::before {
     transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Verhindert das gegenseitige Überlappen und die graue Kante im Ruhezustand */
 .top-stalactites:hover::before, .bottom-stalagmites:hover::before {
     opacity: 0;
 }
@@ -143,11 +145,12 @@ body::before {
     height: auto; 
     border: 1px solid transparent; 
     border-radius: 12px; 
+    /* WICHTIG: Die Standard-Glasfarbe ist wieder da, aber NUR sichtbar wenn die Spalte gehovered wird */
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.25) 100%);
     backdrop-filter: blur(40px) saturate(160%);
     -webkit-backdrop-filter: blur(40px) saturate(160%);
     z-index: 2; 
-    opacity: 0; /* Versteckt unter Monolith */
+    opacity: 0; /* Perfekt versteckt unter dem Monolithen im Ruhezustand */
     transform: translateZ(0);
     transition: flex-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
                 background 0.4s ease,
@@ -156,7 +159,7 @@ body::before {
                 opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Einblenden bei Spalten-Hover */
+/* Einblenden bei Spalten-Hover: Macht die einzelnen Segmente weich sichtbar */
 .top-stalactites:hover .time-block.future,
 .bottom-stalagmites:hover .time-block.past {
     opacity: 1;
@@ -170,7 +173,7 @@ body::before {
     flex-grow: 6; 
 }
 
-/* DIE EDLE ZARTE FOKUS-MULDE (Wenn die Maus direkt auf dem Block liegt) */
+/* DIE EDLE ZARTE FOKUS-MULDE */
 .top-stalactites:hover .time-block.future:hover,
 .bottom-stalagmites:hover .time-block.past:hover {
     background: rgba(255, 255, 255, 0.03) !important; 
@@ -182,65 +185,56 @@ body::before {
 }
 
 /* ==========================================================================
-   DIE SEKUNDEN-KASKADE: NAHTLOSE GUSSFORM
+   DIE SEKUNDEN-KASKADE: PURISTISCH MIT SEIDENWEICHEM FADE-OUT
    ========================================================================== */
 
-/* DIE SÄULE: Wieder im identischen, edlen Liquid-Glass-Look */
 .cascade-zone {
     display: flex;
     flex-direction: column; 
     justify-content: flex-end; 
-    height: 100%;
-    width: 110px; 
-    padding: 0; 
-    border-radius: 24px; /* Identisch zu den Monolithen */
-    overflow: hidden; /* Schneidet herauf- und herausfließende Balken sauber ab */
+    height: 100%;             
+    width: 110px;             
+    padding: 0 5px;           
     position: relative;
     z-index: 3;
+    border-radius: 24px;
     
-    /* Der bewährte Liquid-Glass-Körper im Ruhezustand */
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.15) 100%);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    overflow: visible;         
+}
+
+.seconds-progress {
+    width: calc(100% - 10px); 
+    height: 0%;               
+    border-radius: 24px;      
+    position: absolute;
+    bottom: 0;
+    left: 5px;                
+    z-index: 4;
+    
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.25) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.4);
     backdrop-filter: blur(40px) saturate(160%);
     -webkit-backdrop-filter: blur(40px) saturate(160%);
+    
     box-shadow: 
         inset 0 1px 2px rgba(255, 255, 255, 0.8),
         0 4px 10px rgba(25, 31, 40, 0.03),         
         0 15px 30px rgba(110, 125, 150, 0.1),      
-        0 35px 65px rgba(90, 105, 130, 0.15); 
+        0 35px 65px rgba(90, 105, 130, 0.15);
+    
+    transition: height 1s linear, opacity 0.3s ease;
+    opacity: 1;
 }
 
-/* DIE FLÜSSIGEN SEKUNDEN-TRACKS */
-.seconds-progress {
-    width: 100%;
-    height: 100%; 
-    border-radius: 24px; 
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    
-    /* DER VERLAUF: Oben sattes Weiß, fadet nach unten zu 100% ins unsichtbare Nichts */
-    background: linear-gradient(
-        180deg, 
-        rgba(255, 255, 255, 0.9) 0%,   /* Oben: Starker Kontrast */
-        rgba(255, 255, 255, 0.0) 100%  /* Unten: Verschmilzt mit dem Studio-Hintergrund */
-    );
-    
-    /* Scharfe Licht-Oberkante */
-    border-top: 1px solid rgba(255, 255, 255, 1);
-    box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.4);
-    
-    /* Startposition: Ganz unten versteckt */
-    transform: translateY(100%); 
-    
-    /* Standard-Übergang für das flüssige Steigen (1s linear) */
-    transition: transform 1s linear, opacity 0.5s ease;
-}
-
-/* Hilfsklasse für den abgelaufenen Balken, der nach oben entweicht */
 .seconds-progress.exiting {
-    transition: transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease;
-    opacity: 0; /* Fadet beim Entweichen elegant aus */
+    height: 100% !important;                    
+    opacity: 0 !important;                      
+    transition: opacity 1.5s ease-in-out !important; 
 }
 
 .spindle-zone, .spindle-wrapper, .year-item, .second-tile {

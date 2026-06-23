@@ -40,65 +40,52 @@ let aktiverBalken = null;
 let letzterSekundenWert = -1;
 
 export function renderSekundenKaskade(container, aktuelleSekunde) {
-    // Initialisierung beim ersten Laden der Uhr
     if (!aktiverBalken) {
         container.innerHTML = "";
         aktiverBalken = document.createElement("div");
         aktiverBalken.className = "seconds-progress";
         container.appendChild(aktiverBalken);
         
-        // Sofort richtig positionieren, damit es beim Start nicht ruckelt
-        const startProzent = 100 - ((aktuelleSekunde / 60) * 100);
-        aktiverBalken.style.transform = `translateY(${startProzent}%)`;
+        const startProzent = (aktuelleSekunde / 60) * 100;
+        aktiverBalken.style.height = `${startProzent}%`;
         letzterSekundenWert = aktuelleSekunde;
         return;
     }
 
-    // Nur agieren, wenn sich die Sekunde wirklich verändert hat
     if (aktuelleSekunde !== letzterSekundenWert) {
         
-        // MINUTENWECHSEL-EFFEKT (Von Sekunde 59 auf 0)
         if (aktuelleSekunde === 0 && letzterSekundenWert === 59) {
-            // 1. Der alte Balken schießt auf 0% translateY (also randvoll gegossen)
-            aktiverBalken.style.transform = "translateY(0%)";
-            
-            // 2. Wir markieren ihn, damit er nach oben hin ausbricht
+            // Der Balken IST durch den vorherigen Schritt (Sekunde 59) schon bei 100%
             const ausbrechenderBalken = aktiverBalken;
             ausbrechenderBalken.classList.add("exiting");
             
-            // Befehl zum nach oben Rausschießen (Aus dem Container nach oben weg)
-            setTimeout(() => {
-                ausbrechenderBalken.style.transform = "translateY(-100%)";
-            }, 50);
-
-            // 3. Einen neuen, frischen Balken unten im Gehäuse gebären
+            // Den neuen Sekundenbalken parallel mit 0% Höhe am Boden starten lassen
             const neuerBalken = document.createElement("div");
             neuerBalken.className = "seconds-progress";
-            neuerBalken.style.transition = "none"; // Keine Animation beim Spawnen ganz unten
-            neuerBalken.style.transform = "translateY(100%)"; 
+            neuerBalken.style.transition = "none"; 
+            neuerBalken.style.height = "0%"; 
             container.appendChild(neuerBalken);
 
-            // Ein Frame warten, damit der Browser die Startposition unten kapiert
             requestAnimationFrame(() => {
-                neuerBalken.style.transition = "transform 1s linear, opacity 0.5s ease";
-                // Der neue Balken übernimmt sofort den Tick für die Sekunde 0
-                neuerBalken.style.transform = "translateY(100%)"; 
+                neuerBalken.style.transition = "height 1s linear, opacity 0.3s ease";
+                neuerBalken.style.height = "0%"; 
             });
 
-            // Alten Balken nach der Ausfliegs-Animation komplett aus dem DOM löschen
             setTimeout(() => {
                 ausbrechenderBalken.remove();
-            }, 1300);
+            }, 1600);
 
-            // Den Fokus auf das neue Element umschalten
             aktiverBalken = neuerBalken;
 
         } else {
-            // REGULÄRER FLUSS (Sekunden 1 bis 59)
-            // Wenn der Balken gerade frisch übernommen hat (nach Sekunde 0), 
-            // animiert er nun geschmeidig hoch.
-            const prozent = 100 - ((aktuelleSekunde / 60) * 100);
-            aktiverBalken.style.transform = `translateY(${prozent}%)`;
+            // NEU: Bei Sekunde 59 animiert er flüssig bis zur echten Decke (100%)
+            if (aktuelleSekunde === 59) {
+                aktiverBalken.style.height = "100%";
+            } else {
+                // Reguläres, lineares Anwachsen von Sekunde 1 bis 58
+                const prozent = (aktuelleSekunde / 60) * 100;
+                aktiverBalken.style.height = `${prozent}%`;
+            }
         }
 
         letzterSekundenWert = aktuelleSekunde;
