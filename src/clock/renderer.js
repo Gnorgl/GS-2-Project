@@ -78,7 +78,7 @@ export function renderSekundenKaskade(container, aktuelleSekunde) {
             aktiverBalken = neuerBalken;
 
         } else {
-            // NEU: Bei Sekunde 59 animiert er flüssig bis zur echten Decke (100%)
+            //Bei Sekunde 59 animiert er flüssig bis zur echten Decke (100%)
             if (aktuelleSekunde === 59) {
                 aktiverBalken.style.height = "100%";
             } else {

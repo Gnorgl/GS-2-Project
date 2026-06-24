@@ -178,7 +178,6 @@ body::before {
     flex-grow: 6; 
 }
 
-/* DIE EDLE ZARTE FOKUS-MULDE */
 .top-stalactites:hover .time-block.future:hover,
 .bottom-stalagmites:hover .time-block.past:hover {
     background: rgba(255, 255, 255, 0.03) !important; 
@@ -190,7 +189,7 @@ body::before {
 }
 
 /* ==========================================================================
-   DIE SEKUNDEN-KASKADE: PURISTISCH MIT SEIDENWEICHEM FADE-OUT
+   DIE SEKUNDEN-KASKADE:
    ========================================================================== */
 
 .cascade-zone {
