@@ -22,9 +22,9 @@
 body {
     margin: 0;
     padding: 0;
-    /* Ein extrem matter, edler Luxus-Verlauf: von mattem Terrakotta/Sand zu sanftem Muted-Orange */
-    background: linear-gradient(135deg, #cbd1db 0%, #d8c3bd 40%, #e2ceb9 70%, #dcd1c4 100%);
-    color: var(--text-dark);
+    /* Ein satter, kinoreifer Verlauf: Ein glühendes, dunkles Rotzentrum, das in absolutes Schwarz verläuft */
+    background: radial-gradient(circle at 50% 45%, #990000 0%, #4a0000 35%, #150001 70%, #050505 100%);
+    color: #ffffff; /* Textfarbe für den Notfall auf weiß geändert, da der Hintergrund dunkel ist */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -40,8 +40,8 @@ body::before {
     position: absolute;
     top: 0; left: 0; right: 0; bottom: 0;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3e%3cfilter id='noiseFilter'%3e%3cfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3e%3c/svg%3e");
-    opacity: 0.015; /* Wieder dezent zurückgeschraubt */
-    mix-blend-mode: overlay;
+    opacity: 0.03; /* Leicht erhöht, da digitales Rauschen auf dunklen Flächen extrem edel und stofflich wirkt */
+    mix-blend-mode: screen; /* Von overlay auf screen gewechselt, damit es auf Schwarz sichtbar bleibt */
     pointer-events: none;
     z-index: 2;
 }
