@@ -55,11 +55,9 @@ export function renderSekundenKaskade(container, aktuelleSekunde) {
     if (aktuelleSekunde !== letzterSekundenWert) {
         
         if (aktuelleSekunde === 0 && letzterSekundenWert === 59) {
-            // Der Balken IST durch den vorherigen Schritt (Sekunde 59) schon bei 100%
             const ausbrechenderBalken = aktiverBalken;
             ausbrechenderBalken.classList.add("exiting");
             
-            // Den neuen Sekundenbalken parallel mit 0% Höhe am Boden starten lassen
             const neuerBalken = document.createElement("div");
             neuerBalken.className = "seconds-progress";
             neuerBalken.style.transition = "none"; 
@@ -78,11 +76,9 @@ export function renderSekundenKaskade(container, aktuelleSekunde) {
             aktiverBalken = neuerBalken;
 
         } else {
-            //Bei Sekunde 59 animiert er flüssig bis zur echten Decke (100%)
             if (aktuelleSekunde === 59) {
                 aktiverBalken.style.height = "100%";
             } else {
-                // Reguläres, lineares Anwachsen von Sekunde 1 bis 58
                 const prozent = (aktuelleSekunde / 60) * 100;
                 aktiverBalken.style.height = `${prozent}%`;
             }
